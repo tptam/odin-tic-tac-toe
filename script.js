@@ -18,7 +18,7 @@ const game = function(){
         updateWinner();
     }
 
-    const changeTurn = () => {
+    const takeTurn = () => {
         const lastPlayer = players.shift();
         players.push(lastPlayer);
     }
@@ -40,7 +40,7 @@ const game = function(){
     return {
         init,
         createPlayer,
-        changeTurn,
+        takeTurn,
         placeMarker, 
         isOver,
         hasWinner,
@@ -128,6 +128,7 @@ const game = function(){
 const displayController = function(doc, game){
     const cells = doc.querySelectorAll(".board button");
     const message = doc.querySelector(".message");
+    const nameDialog = doc.querySelector(".name-dialog");
 
     cells.forEach((cell) => {
         cell.addEventListener(
@@ -137,11 +138,39 @@ const displayController = function(doc, game){
                     game.getCurrentPlayer(), 
                     e.target.getAttribute("data-index")
                 );
-                game.changeTurn();
+                game.takeTurn();
                 updateDisplay();
             }
         )
     });
+
+    const cancel = doc.querySelector("button.cancel");
+    const start = doc.querySelector("button.start");
+
+    cancel.addEventListener(
+        "click",
+        (e) => {
+            nameDialog.close(null);
+            e.preventDefault();
+        }
+    );
+
+    start.addEventListener(
+        "click",
+        (e) => {
+            game.createPlayer(
+                document.querySelector("#player1").value,
+                "O"
+            );
+            game.createPlayer(
+                document.querySelector("#player2").value,
+                "X"
+            );
+            nameDialog.close(null);
+            updateDisplay();    
+            e.preventDefault();        
+        }
+    );
 
     function updateDisplay(){
         const boardData = game.getBoard();
@@ -166,14 +195,14 @@ const displayController = function(doc, game){
     function displayMessage(text) {
         message.textContent = text;
     }
-    
+
     return {updateDisplay}
 }(document, game);
 
   // Game Flow
 game.init();
-game.createPlayer("Player 1", "O");
-game.createPlayer("Player 2", "X");
+// game.createPlayer("Player 1", "O");
+// game.createPlayer("Player 2", "X");
 
 // game.populateBoard([
 //     "O",  "X",  "O",
@@ -181,13 +210,13 @@ game.createPlayer("Player 2", "X");
 //     null, null, "O",
 // ]);
 
-displayController.updateDisplay();
+document.querySelector(".name-dialog").showModal();
 
 //   while(!game.isOver()) {
 //     const currentPlayer = game.getCurrentPlayer();
 //     const cell = prompt(`${currentPlayer.getName()}: Pick where to place marker:\n ${showAs3x3(game.getBoard())}`);
 //     game.placeMarker(currentPlayer, cell);
-//     game.changeTurn();
+//     game.takeTurn();
 //   }
   
 //   if (game.hasWinner()) {
