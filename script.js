@@ -127,6 +127,7 @@ const game = function(){
 
 const displayController = function(doc, game){
     const cells = doc.querySelectorAll(".board button");
+    const message = doc.querySelector(".message");
 
     cells.forEach((cell) => {
         cell.addEventListener(
@@ -136,8 +137,8 @@ const displayController = function(doc, game){
                     game.getCurrentPlayer(), 
                     e.target.getAttribute("data-index")
                 );
-                updateDisplay();
                 game.changeTurn();
+                updateDisplay();
             }
         )
     });
@@ -150,6 +151,21 @@ const displayController = function(doc, game){
                 cells[i].disabled = true;
             }
         }
+        if (game.isOver()){
+            cells.forEach(cell => cell.disabled = true);
+            if (game.hasWinner()) {
+                displayMessage(`Game Over: ${game.getWinner().getName()} wins`);
+            } else {
+                displayMessage("Game Over: Draw");
+            }
+        } else {
+            displayMessage(`${game.getCurrentPlayer().getName()}'s turn`);
+        }
+    }
+
+    function displayMessage(text) {
+
+        message.textContent = text;
     }
     return {updateDisplay}
 }(document, game);
@@ -159,11 +175,11 @@ game.init();
 game.createPlayer("Player 1", "O");
 game.createPlayer("Player 2", "X");
 
-game.populateBoard([
-    "O",  "X",  "O",
-    "X",  null, null,
-    null, null, "O",
-]);
+// game.populateBoard([
+//     "O",  "X",  "O",
+//     "X",  null, null,
+//     null, null, "O",
+// ]);
 
 displayController.updateDisplay();
 
