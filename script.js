@@ -128,6 +128,20 @@ const game = function(){
 const displayController = function(doc, game){
     const cells = doc.querySelectorAll(".board button");
 
+    cells.forEach((cell) => {
+        cell.addEventListener(
+            "click",
+            (e) => {
+                game.placeMarker(
+                    game.getCurrentPlayer(), 
+                    e.target.getAttribute("data-index")
+                );
+                updateDisplay();
+                game.changeTurn();
+            }
+        )
+    });
+
     function updateDisplay(){
         const boardData = game.getBoard();
         for (let i = 0; i < 9; i++) {
