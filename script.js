@@ -125,6 +125,7 @@ const game = function(){
     }
 }();
 
+
 const displayController = function(doc, game){
     const cells = doc.querySelectorAll(".board button");
     const message = doc.querySelector(".message");
@@ -144,10 +145,11 @@ const displayController = function(doc, game){
         )
     });
 
-    const cancel = doc.querySelector("button.cancel");
-    const start = doc.querySelector("button.start");
+    doc.querySelector("button.start-game").addEventListener(
+        "click", startGame
+    );
 
-    cancel.addEventListener(
+    doc.querySelector("dialog button.cancel").addEventListener(
         "click",
         (e) => {
             nameDialog.close(null);
@@ -155,7 +157,7 @@ const displayController = function(doc, game){
         }
     );
 
-    start.addEventListener(
+    doc.querySelector("dialog button.start-turn").addEventListener(
         "click",
         (e) => {
             game.createPlayer(
@@ -167,10 +169,22 @@ const displayController = function(doc, game){
                 "X"
             );
             nameDialog.close(null);
+            doc.querySelector("button.start-game").textContent = "Restart";
+            enableBoard();
             updateDisplay();    
             e.preventDefault();        
         }
     );
+
+    function startGame(){
+        game.init();
+        nameDialog.showModal();
+    }
+
+    function replayGame(){
+        game.init();
+        enableBoard();
+    }
 
     function updateDisplay(){
         const boardData = game.getBoard();
@@ -181,6 +195,8 @@ const displayController = function(doc, game){
             }
         }
         if (game.isOver()){
+            disableBoard();
+            doc.querySelector("button.start-game").textContent = "Start";
             cells.forEach(cell => cell.disabled = true);
             if (game.hasWinner()) {
                 displayMessage(`Game Over: ${game.getWinner().getName()} wins`);
@@ -192,6 +208,14 @@ const displayController = function(doc, game){
         }
     }
 
+    function disableBoard(){
+        cells.forEach(cell => cell.disabled = true);
+    }
+
+    function enableBoard(){
+        cells.forEach(cell => cell.disabled = false);
+    }
+
     function displayMessage(text) {
         message.textContent = text;
     }
@@ -200,7 +224,7 @@ const displayController = function(doc, game){
 }(document, game);
 
   // Game Flow
-game.init();
+// game.init();
 // game.createPlayer("Player 1", "O");
 // game.createPlayer("Player 2", "X");
 
@@ -210,7 +234,7 @@ game.init();
 //     null, null, "O",
 // ]);
 
-document.querySelector(".name-dialog").showModal();
+// document.querySelector(".name-dialog").showModal();
 
 //   while(!game.isOver()) {
 //     const currentPlayer = game.getCurrentPlayer();
