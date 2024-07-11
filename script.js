@@ -1,4 +1,4 @@
-function createGame(){
+const game = function(){
   
     let board = null;
     const players = [];
@@ -10,21 +10,20 @@ function createGame(){
       } else {
         createBoard();
       }
-      players.splice(0, players.length);
       winner = null;
     };
-  
-    const changeTurn = () => {
-      const lastPlayer = players.shift();
-      players.push(lastPlayer);
-    }
   
     const placeMarker = (player, cell) => {
       board.placeMarker(player.getMarker(), cell);
       updateWinner();
     }
+
+    const changeTurn = () => {
+        const lastPlayer = players.shift();
+        players.push(lastPlayer);
+    }
   
-    const isOver = () => board.isFull() || winner !== null;
+    const isOver = () => isDraw() || winner !== null;
   
     const hasWinner = () => winner !== null;
   
@@ -47,29 +46,14 @@ function createGame(){
     }
   
     function updateWinner() {
-      let lineWinner;
-      for (let i = 0; i < 3; i++) {
-        lineWinner = getLineWinner(board.getRow(i));
-        if (lineWinner !== null) {
-          winner = lineWinner;
-          return;
+        const lines = board.getLines();
+        for (line of lines) {
+            const lineWinner = getLineWinner(line);
+            if (lineWinner !== null) {
+                winner = lineWinner;
+                return;
+            }
         }
-        lineWinner = getLineWinner(board.getColumn(i));
-        if (lineWinner !== null) {
-          winner = lineWinner;
-          return;
-        }
-      }
-      lineWinner = getLineWinner(board.getMainDiagonal());
-      if (lineWinner !== null) {
-        winner = lineWinner;
-        return;
-      }
-      lineWinner = getLineWinner(board.getAntiDiagonal());
-      if (lineWinner !== null) {
-        winner = lineWinner;
-        return;
-      }
     }
   
     function getLineWinner(line){
@@ -79,6 +63,28 @@ function createGame(){
       return winnerMarker === null 
         ? null 
         : getPlayerByMarker(winnerMarker);
+    }
+
+    function isDraw(){
+        if (board.isFull()) {
+            return true;
+        }
+        const lines = board.getLines();
+        for (line of lines) {
+            if (!isLineDraw(line)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function isLineDraw(line){
+        // If a line includes 2 different markers,
+        // there is no chance that either player wins it. 
+        return line
+            .filter(val => val !== null)
+            .filter((value, index, array) => array.indexOf(value) === index)
+            .length > 1;
     }
   
     function getPlayerByMarker(marker) {
@@ -97,7 +103,12 @@ function createGame(){
       const getColumn = (col) => [col, col+3, col+6].map(n => boardArray[n]);
       const getMainDiagonal = () => [0, 4, 8].map(n => boardArray[n]);
       const getAntiDiagonal = () => [2, 4, 6].map(n => boardArray[n]);
-      board = {isFull, getBoard, reset, placeMarker, getRow, getColumn, getMainDiagonal, getAntiDiagonal};
+      const getLines = () => [
+        getRow(0), getRow(1), getRow(2),
+        getColumn(0), getColumn(1), getColumn(2),
+        getMainDiagonal(), getAntiDiagonal()
+      ]
+      board = {isFull, getBoard, reset, placeMarker, getLines};
     }
   
     function createPlayer(playerName, playerMarker){
@@ -107,11 +118,9 @@ function createGame(){
       const getMarker= () => marker;
       players.push({getName, getMarker});
     }
-  }
+  }();
   
-  
-  // Game outline
-  const game = createGame();
+  // Game Flow
   game.init();
   game.createPlayer("Player 1", "O");
   game.createPlayer("Player 2", "X");
