@@ -31,5 +31,10 @@ ul, ol {
 .board button {
     width: calc(80vmin / 3);
     height: calc(80vmin / 3);
-    border: 1px solid gray;
+    font-size: calc(80vmin / 6);
+    /* border: 1px solid gray; */
+}
+
+.board button :disabled {
+    cursor: not-allowed;
 }

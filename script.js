@@ -22,6 +22,14 @@ const game = function(){
         const lastPlayer = players.shift();
         players.push(lastPlayer);
     }
+
+    const populateBoard = (array) => {
+        for (let i = 0; i < 9; i++) {
+            if (array[i] !== null){ 
+               board.placeMarker(array[i], i);
+            }
+        }
+    }
   
     const isOver = () => isDraw() || winner !== null;
     const hasWinner = () => winner !== null;
@@ -39,6 +47,7 @@ const game = function(){
         getBoard,
         getCurrentPlayer,
         getWinner,
+        populateBoard, /* For debug only */
     }
   
     function updateWinner() {
@@ -116,13 +125,23 @@ const game = function(){
     }
 }();
 
-
+const displayController = function(doc, game){
+    return {updateDisplay}
+}(document, game);
 
   // Game Flow
-//   game.init();
-//   game.createPlayer("Player 1", "O");
-//   game.createPlayer("Player 2", "X");
-  
+game.init();
+game.createPlayer("Player 1", "O");
+game.createPlayer("Player 2", "X");
+
+game.populateBoard([
+    "O",  "X",  "O",
+    "X",  null, null,
+    null, null, "O",
+]);
+
+displayController.updateDisplay();
+
 //   while(!game.isOver()) {
 //     const currentPlayer = game.getCurrentPlayer();
 //     const cell = prompt(`${currentPlayer.getName()}: Pick where to place marker:\n ${showAs3x3(game.getBoard())}`);
