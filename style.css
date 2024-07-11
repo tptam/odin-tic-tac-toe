@@ -1,4 +1,5 @@
 :root {
+    --gutter: 20px;
     --neutral-text-color: #000;
     --board-color: ;
 }
@@ -43,8 +44,21 @@ body {
     cursor: not-allowed;
 }
 
-dialog {
+dialog[open] {
+    padding: var(--gutter);
     position: fixed;
     inset: 0;
     margin: auto;
+}
+
+form {
+    margin-top: var(--gutter);
+    display: grid;
+    grid-auto-flow: row;
+    gap: var(--gutter);
+    grid-template: repeat(3, 1fr) / repeat(2, 1fr);
+}
+
+label {
+    grid-column: 1 / -1;
 }
