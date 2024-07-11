@@ -126,6 +126,17 @@ const game = function(){
 }();
 
 const displayController = function(doc, game){
+    const cells = doc.querySelectorAll(".board button");
+
+    function updateDisplay(){
+        const boardData = game.getBoard();
+        for (let i = 0; i < 9; i++) {
+            if (boardData[i] !== null) {
+                cells[i].textContent = boardData[i];
+                cells[i].disabled = true;
+            }
+        }
+    }
     return {updateDisplay}
 }(document, game);
 
