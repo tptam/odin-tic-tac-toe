@@ -5,17 +5,17 @@ const game = function(){
     let winner = null;
   
     const init = () => {
-      if (board) {
-        board.reset();
-      } else {
-        createBoard();
-      }
-      winner = null;
+        if (board) {
+            board.reset();
+        } else {
+            createBoard();
+        }
+        winner = null;
     };
   
     const placeMarker = (player, cell) => {
-      board.placeMarker(player.getMarker(), cell);
-      updateWinner();
+        board.placeMarker(player.getMarker(), cell);
+        updateWinner();
     }
 
     const changeTurn = () => {
@@ -30,15 +30,15 @@ const game = function(){
     const getWinner = () => winner;
   
     return {
-      init,
-      createPlayer,
-      changeTurn,
-      placeMarker, 
-      isOver,
-      hasWinner,
-      getBoard,
-      getCurrentPlayer,
-      getWinner,
+        init,
+        createPlayer,
+        changeTurn,
+        placeMarker, 
+        isOver,
+        hasWinner,
+        getBoard,
+        getCurrentPlayer,
+        getWinner,
     }
   
     function updateWinner() {
@@ -90,32 +90,34 @@ const game = function(){
     }
   
     function createBoard() {
-      const boardArray = Array(9).fill(null);
-      const isFull = () => boardArray.filter(val=>val===null).length === 0;
-      const getBoard = () => boardArray;
-      const reset = () => boardArray.fill(null);
-      const placeMarker = (marker, cell) => boardArray[cell] = marker;
-      const getRow = (row) => boardArray.slice(row * 3, row * 3 + 3);
-      const getColumn = (col) => [col, col+3, col+6].map(n => boardArray[n]);
-      const getMainDiagonal = () => [0, 4, 8].map(n => boardArray[n]);
-      const getAntiDiagonal = () => [2, 4, 6].map(n => boardArray[n]);
-      const getLines = () => [
-        getRow(0), getRow(1), getRow(2),
-        getColumn(0), getColumn(1), getColumn(2),
-        getMainDiagonal(), getAntiDiagonal()
-      ]
-      board = {isFull, getBoard, reset, placeMarker, getLines};
+        const boardArray = Array(9).fill(null);
+        const isFull = () => boardArray.filter(val=>val===null).length === 0;
+        const getBoard = () => boardArray;
+        const reset = () => boardArray.fill(null);
+        const placeMarker = (marker, cell) => boardArray[cell] = marker;
+        const getRow = (row) => boardArray.slice(row * 3, row * 3 + 3);
+        const getColumn = (col) => [col, col+3, col+6].map(n => boardArray[n]);
+        const getMainDiagonal = () => [0, 4, 8].map(n => boardArray[n]);
+        const getAntiDiagonal = () => [2, 4, 6].map(n => boardArray[n]);
+        const getLines = () => [
+            getRow(0), getRow(1), getRow(2),
+            getColumn(0), getColumn(1), getColumn(2),
+            getMainDiagonal(), getAntiDiagonal()
+        ]
+        board = {isFull, getBoard, reset, placeMarker, getLines};
     }
   
     function createPlayer(playerName, playerMarker){
-      const name = playerName;
-      const marker = playerMarker;
-      const getName = () => name;
-      const getMarker= () => marker;
-      players.push({getName, getMarker});
+        const name = playerName;
+        const marker = playerMarker;
+        const getName = () => name;
+        const getMarker= () => marker;
+        players.push({getName, getMarker});
     }
-  }();
-  
+}();
+
+
+
   // Game Flow
 //   game.init();
 //   game.createPlayer("Player 1", "O");
