@@ -18,6 +18,10 @@ ul, ol {
     list-style: none;
 }
 
+body {
+    position: relative;
+}
+
 .message {
     font-size: 2rem;
 }
@@ -37,4 +41,10 @@ ul, ol {
 
 .board button :disabled {
     cursor: not-allowed;
+}
+
+dialog {
+    position: fixed;
+    inset: 0;
+    margin: auto;
 }

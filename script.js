@@ -164,9 +164,9 @@ const displayController = function(doc, game){
     }
 
     function displayMessage(text) {
-
         message.textContent = text;
     }
+    
     return {updateDisplay}
 }(document, game);
 
