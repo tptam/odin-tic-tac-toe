@@ -1,5 +1,6 @@
 :root {
     --neutral-text-color: #000;
+    --board-color: ;
 }
 
 * {
@@ -15,4 +16,20 @@ a {
 
 ul, ol {
     list-style: none;
+}
+
+.message {
+    font-size: 2rem;
+}
+
+.board {
+    width: 80vmin;
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+}
+
+.board button {
+    width: calc(80vmin / 3);
+    height: calc(80vmin / 3);
+    border: 1px solid gray;
 }

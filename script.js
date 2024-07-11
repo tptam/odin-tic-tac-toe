@@ -24,13 +24,9 @@ const game = function(){
     }
   
     const isOver = () => isDraw() || winner !== null;
-  
     const hasWinner = () => winner !== null;
-  
     const getBoard = () => board.getBoard();
-  
     const getCurrentPlayer = () => players.at(0);
-  
     const getWinner = () => winner;
   
     return {
@@ -79,7 +75,7 @@ const game = function(){
     }
 
     function isLineDraw(line){
-        // If a line includes 2 different markers,
+        // If a line has 2 different markers,
         // there is no chance that either player wins it. 
         return line
             .filter(val => val !== null)
@@ -121,26 +117,26 @@ const game = function(){
   }();
   
   // Game Flow
-  game.init();
-  game.createPlayer("Player 1", "O");
-  game.createPlayer("Player 2", "X");
+//   game.init();
+//   game.createPlayer("Player 1", "O");
+//   game.createPlayer("Player 2", "X");
   
-  while(!game.isOver()) {
-    const currentPlayer = game.getCurrentPlayer();
-    const cell = prompt(`${currentPlayer.getName()}: Pick where to place marker:\n ${showAs3x3(game.getBoard())}`);
-    game.placeMarker(currentPlayer, cell);
-    game.changeTurn();
-  }
+//   while(!game.isOver()) {
+//     const currentPlayer = game.getCurrentPlayer();
+//     const cell = prompt(`${currentPlayer.getName()}: Pick where to place marker:\n ${showAs3x3(game.getBoard())}`);
+//     game.placeMarker(currentPlayer, cell);
+//     game.changeTurn();
+//   }
   
-  if (game.hasWinner()) {
-    console.log(`${game.getWinner().getName()} Wins`);
-  } else {
-    console.log(`Game ended with a draw`)
-  }
+//   if (game.hasWinner()) {
+//     console.log(`${game.getWinner().getName()} Wins`);
+//   } else {
+//     console.log(`Game ended with a draw`)
+//   }
   
-  function showAs3x3(array) {
-    const newArray = array.map(val => val===null ? '#' : val);
-    return `${newArray.slice(0, 3).join(" ")}
-  ${newArray.slice(3, 6).join(" ")}
-  ${newArray.slice(6, 9).join(" ")}`.trim();
-  }
+//   function showAs3x3(array) {
+//     const newArray = array.map(val => val===null ? '#' : val);
+//     return `${newArray.slice(0, 3).join(" ")}
+//   ${newArray.slice(3, 6).join(" ")}
+//   ${newArray.slice(6, 9).join(" ")}`.trim();
+//   }
