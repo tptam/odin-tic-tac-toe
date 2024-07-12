@@ -217,7 +217,6 @@ const displayController = function(doc, game){
     }
 
     function updateStateRelatedView(){
-        console.log(state);
         switch (state) {
             case GAME_OVER:
                 disableBoard();
@@ -265,36 +264,3 @@ const displayController = function(doc, game){
     }
 
 }(document, game);
-
-  // Game Flow
-// game.init();
-// game.createPlayer("Player 1", "O");
-// game.createPlayer("Player 2", "X");
-
-// game.populateBoard([
-//     "O",  "X",  "O",
-//     "X",  null, null,
-//     null, null, "O",
-// ]);
-
-// document.querySelector(".name-dialog").showModal();
-
-//   while(!game.isOver()) {
-//     const currentPlayer = game.getCurrentPlayer();
-//     const cell = prompt(`${currentPlayer.getName()}: Pick where to place marker:\n ${showAs3x3(game.getBoard())}`);
-//     game.placeMarker(currentPlayer, cell);
-//     game.switchTurn();
-//   }
-  
-//   if (game.hasWinner()) {
-//     console.log(`${game.getWinner().getName()} Wins`);
-//   } else {
-//     console.log(`Game ended with a draw`)
-//   }
-  
-//   function showAs3x3(array) {
-//     const newArray = array.map(val => val===null ? '#' : val);
-//     return `${newArray.slice(0, 3).join(" ")}
-//   ${newArray.slice(3, 6).join(" ")}
-//   ${newArray.slice(6, 9).join(" ")}`.trim();
-//   }

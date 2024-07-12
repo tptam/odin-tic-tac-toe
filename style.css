@@ -134,6 +134,8 @@ img#v2 {
     background: transparent;
     opacity: 0.9;
     border: none;
+    -webkit-user-select: none; /* Safari */
+    user-select: none;
 }
 
 .cells button :disabled {
