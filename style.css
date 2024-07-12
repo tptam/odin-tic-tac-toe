@@ -30,10 +30,12 @@
     --background-color: #eaeae8;
     --dialog-color: #f9f0cd;
     --light-blue: #adc4df;
+    --alert-color: #009688;
 
-    --alert-color: #e24405;
+    /* Might use later */
     --light-pink: #dfadad;
-    --blue: #176ecf;
+    --blue: #176ecf;   
+    --red: #e24405;
 }
 
 * {
@@ -78,6 +80,10 @@ body {
     font-size: 2.5rem;
     transform: rotate(-2deg);
     font-weight: 700;
+}
+
+.message.game-over {
+    color: var(--alert-color);
 }
 
 .board {

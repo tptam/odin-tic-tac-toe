@@ -226,10 +226,12 @@ const displayController = function(doc, game){
                 } else {
                     displayMessage("Game Over: Draw");
                 }
+                message.classList.add("game-over");
                 return;
             case IN_PROGRESS:
                 updateControlButtonsView();
                 displayMessage(`${game.getCurrentPlayer().getName()}'s turn`);
+                message.classList.remove("game-over");
                 return;
         }
     }
