@@ -255,10 +255,6 @@ const displayController = function(doc, game){
         cells.forEach(cell => cell.disabled = true);
     }
 
-    function enableBoard(){
-        cells.forEach(cell => cell.disabled = false);
-    }
-
     function displayMessage(text) {
         message.textContent = text;
     }
