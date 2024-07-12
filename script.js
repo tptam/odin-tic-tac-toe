@@ -197,7 +197,6 @@ const displayController = function(doc, game){
     }
 
     function continueGame(){
-        console.log('continue');
         game.init();
         updateState();
         updateStateRelatedView();
@@ -230,7 +229,6 @@ const displayController = function(doc, game){
                 }
                 return;
             case IN_PROGRESS:
-                enableBoard();
                 updateControlButtonsView();
                 displayMessage(`${game.getCurrentPlayer().getName()}'s turn`);
                 return;
@@ -242,7 +240,7 @@ const displayController = function(doc, game){
             case IN_PROGRESS:
                 startNewButton.hidden = false;
                 continueButton.hidden = false;
-                startNewButton.textContent = "Reset Player";
+                startNewButton.textContent = "Reset Players";
                 continueButton.textContent = "Restart";
                 return;
             case GAME_OVER:
