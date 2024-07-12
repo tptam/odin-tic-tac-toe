@@ -224,7 +224,7 @@ const displayController = function(doc, game){
                 disableBoard();
                 updateControlButtonsView();
                 if (game.hasWinner()) {
-                    displayMessage(`Game Over: ${game.getWinner().getName()} wins`);
+                    displayMessage(`Game Over: ${game.getWinner().getName()} wins!`);
                 } else {
                     displayMessage("Game Over: Draw");
                 }

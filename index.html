@@ -9,7 +9,7 @@
 </head>
 <body>
     <dialog class="name-dialog">
-        Input players' names
+        <p>What's your names?</p>
         <form>
             <label for="player1">
                 Player 1
@@ -25,22 +25,28 @@
         </form>
     </dialog>
     <p class="message">
-        Welcome to Tic-Tac-Toe
+        Tic-Tac-Toe
     </p>
     <div class="control">
         <button id="continue" hidden>Restart</button>
         <button id="start-new">Start</button>
     </div>
     <div class="board">
-        <button data-index="0" disabled></button>
-        <button data-index="1" disabled></button>
-        <button data-index="2" disabled></button>
-        <button data-index="3" disabled></button>
-        <button data-index="4" disabled></button>
-        <button data-index="5" disabled></button>
-        <button data-index="6" disabled></button>
-        <button data-index="7" disabled></button>
-        <button data-index="8" disabled></button>
+        <img class="line" id="h1" src="./images/line1.svg" alt="">
+        <img class="line" id="h2" src="./images/line2.svg" alt="">
+        <img class="line" id="v1" src="./images/line1.svg" alt="">
+        <img class="line" id="v2" src="./images/line2.svg" alt="">
+        <div class="cells">
+            <button data-index="0" disabled></button>
+            <button data-index="1" disabled></button>
+            <button data-index="2" disabled></button>
+            <button data-index="3" disabled></button>
+            <button data-index="4" disabled></button>
+            <button data-index="5" disabled></button>
+            <button data-index="6" disabled></button>
+            <button data-index="7" disabled></button>
+            <button data-index="8" disabled></button>
+        </div>
     </div>
 </body>
 </html>
