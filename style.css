@@ -160,3 +160,14 @@ input {
     border: none;
     border-bottom: 1px solid var(--neutral-text-color);
 }
+
+.control {
+    position: absolute;
+}
+
+.control button{
+    padding: 0.25rem 1rem;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+}
