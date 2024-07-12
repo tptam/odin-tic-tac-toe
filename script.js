@@ -11,26 +11,24 @@ const game = function(){
             createBoard();
         }
         winner = null;
+        initPlayerOrder();
     };
+
+    const deletePlayers = () => {
+        players.splice(0, players.length);
+    }
   
     const placeMarker = (player, cell) => {
         board.placeMarker(player.getMarker(), cell);
         updateWinner();
     }
 
-    const takeTurn = () => {
+    const switchTurn = () => {
         const lastPlayer = players.shift();
         players.push(lastPlayer);
     }
-
-    const populateBoard = (array) => {
-        for (let i = 0; i < 9; i++) {
-            if (array[i] !== null){ 
-               board.placeMarker(array[i], i);
-            }
-        }
-    }
   
+    const isStarted = () => players.length > 0;
     const isOver = () => isDraw() || winner !== null;
     const hasWinner = () => winner !== null;
     const getBoard = () => board.getBoard();
@@ -39,20 +37,21 @@ const game = function(){
   
     return {
         init,
+        deletePlayers,
         createPlayer,
-        takeTurn,
-        placeMarker, 
+        switchTurn,
+        placeMarker,
+        isStarted, 
         isOver,
         hasWinner,
         getBoard,
         getCurrentPlayer,
         getWinner,
-        populateBoard, /* For debug only */
     }
   
     function updateWinner() {
         const lines = board.getLines();
-        for (line of lines) {
+        for (let line of lines) {
             const lineWinner = getLineWinner(line);
             if (lineWinner !== null) {
                 winner = lineWinner;
@@ -62,42 +61,28 @@ const game = function(){
     }
   
     function getLineWinner(line){
-      const winnerMarker = line.reduce(
+    const winnerMarker = line.reduce(
         (acc, val) => acc === val ? acc : null
-      )
-      return winnerMarker === null 
+    )
+    return winnerMarker === null 
         ? null 
         : getPlayerByMarker(winnerMarker);
     }
 
     function isDraw(){
-        if (board.isFull()) {
-            return true;
-        }
-        const lines = board.getLines();
-        for (line of lines) {
-            if (!isLineDraw(line)) {
-                return false;
-            }
-        }
-        return true;
+        return board.isFull();
     }
 
-    function isLineDraw(line){
-        // If a line has 2 different markers,
-        // there is no chance that either player wins it. 
-        return line
-            .filter(val => val !== null)
-            .filter((value, index, array) => array.indexOf(value) === index)
-            .length > 1;
-    }
-  
     function getPlayerByMarker(marker) {
       return players.find(
         player => player.getMarker() === marker
       );
     }
-  
+
+    function initPlayerOrder(){
+        players.sort((a, b) => a.getOrder() > b.getOrder() ? 1 : -1);
+    }
+
     function createBoard() {
         const boardArray = Array(9).fill(null);
         const isFull = () => boardArray.filter(val=>val===null).length === 0;
@@ -119,17 +104,25 @@ const game = function(){
     function createPlayer(playerName, playerMarker){
         const name = playerName;
         const marker = playerMarker;
+        const order = players.length;
         const getName = () => name;
         const getMarker= () => marker;
-        players.push({getName, getMarker});
+        const getOrder= () => order;
+        
+        players.push({getName, getMarker, getOrder});
     }
 }();
 
 
 const displayController = function(doc, game){
+    const [IN_PROGRESS, GAME_OVER] = [0, 1];
+    let state;
+
     const cells = doc.querySelectorAll(".board button");
     const message = doc.querySelector(".message");
     const nameDialog = doc.querySelector(".name-dialog");
+    const startNewButton = doc.querySelector("#start-new");
+    const continueButton = doc.querySelector("#continue");
 
     cells.forEach((cell) => {
         cell.addEventListener(
@@ -139,14 +132,20 @@ const displayController = function(doc, game){
                     game.getCurrentPlayer(), 
                     e.target.getAttribute("data-index")
                 );
-                game.takeTurn();
-                updateDisplay();
+                game.switchTurn();
+                updateBoardView();
+                updateState();
+                updateStateRelatedView();
             }
         )
     });
 
-    doc.querySelector("button.start-game").addEventListener(
-        "click", startGame
+
+    startNewButton.addEventListener(
+        "click", askPlayerNames
+    );
+    continueButton.addEventListener(
+        "click", continueGame
     );
 
     doc.querySelector("dialog button.cancel").addEventListener(
@@ -160,51 +159,98 @@ const displayController = function(doc, game){
     doc.querySelector("dialog button.start-turn").addEventListener(
         "click",
         (e) => {
-            game.createPlayer(
-                document.querySelector("#player1").value,
-                "O"
-            );
-            game.createPlayer(
-                document.querySelector("#player2").value,
-                "X"
-            );
             nameDialog.close(null);
-            doc.querySelector("button.start-game").textContent = "Restart";
-            enableBoard();
-            updateDisplay();    
+            startNewGame();
             e.preventDefault();        
         }
     );
 
-    function startGame(){
-        game.init();
+    function updateState(newState){
+        if (!newState===undefined) {
+            state = newState;
+        }
+        if (game.isOver()) {
+            state = GAME_OVER;
+        } else {
+            state = IN_PROGRESS;
+        }
+    }
+
+    function askPlayerNames(){
         nameDialog.showModal();
     }
 
-    function replayGame(){
+    function startNewGame(){
         game.init();
-        enableBoard();
+        game.deletePlayers();
+        game.createPlayer(
+            document.querySelector("#player1").value,
+            "O"
+        );
+        game.createPlayer(
+            document.querySelector("#player2").value,
+            "X"
+        );
+        updateState();
+        updateStateRelatedView();
+        updateBoardView();
     }
 
-    function updateDisplay(){
+    function continueGame(){
+        console.log('continue');
+        game.init();
+        updateState();
+        updateStateRelatedView();
+        updateBoardView();
+    }
+
+    function updateBoardView(){
         const boardData = game.getBoard();
         for (let i = 0; i < 9; i++) {
             if (boardData[i] !== null) {
                 cells[i].textContent = boardData[i];
                 cells[i].disabled = true;
+            } else {
+                cells[i].textContent = "";
+                cells[i].disabled = false;
             }
         }
-        if (game.isOver()){
-            disableBoard();
-            doc.querySelector("button.start-game").textContent = "Start";
-            cells.forEach(cell => cell.disabled = true);
-            if (game.hasWinner()) {
-                displayMessage(`Game Over: ${game.getWinner().getName()} wins`);
-            } else {
-                displayMessage("Game Over: Draw");
-            }
-        } else {
-            displayMessage(`${game.getCurrentPlayer().getName()}'s turn`);
+    }
+
+    function updateStateRelatedView(){
+        console.log(state);
+        switch (state) {
+            case GAME_OVER:
+                disableBoard();
+                updateControlButtonsView();
+                if (game.hasWinner()) {
+                    displayMessage(`Game Over: ${game.getWinner().getName()} wins`);
+                } else {
+                    displayMessage("Game Over: Draw");
+                }
+                return;
+            case IN_PROGRESS:
+                enableBoard();
+                updateControlButtonsView();
+                displayMessage(`${game.getCurrentPlayer().getName()}'s turn`);
+                return;
+        }
+    }
+
+    function updateControlButtonsView(){
+        switch(state){
+            case IN_PROGRESS:
+                startNewButton.hidden = false;
+                continueButton.hidden = false;
+                startNewButton.textContent = "Reset Player";
+                continueButton.textContent = "Restart";
+                return;
+            case GAME_OVER:
+                startNewButton.hidden = false;
+                continueButton.hidden = false;
+                startNewButton.textContent = "Reset Player";
+                continueButton.textContent = "Play Again";
+                return;
         }
     }
 
@@ -220,7 +266,6 @@ const displayController = function(doc, game){
         message.textContent = text;
     }
 
-    return {updateDisplay}
 }(document, game);
 
   // Game Flow
@@ -240,7 +285,7 @@ const displayController = function(doc, game){
 //     const currentPlayer = game.getCurrentPlayer();
 //     const cell = prompt(`${currentPlayer.getName()}: Pick where to place marker:\n ${showAs3x3(game.getBoard())}`);
 //     game.placeMarker(currentPlayer, cell);
-//     game.takeTurn();
+//     game.switchTurn();
 //   }
   
 //   if (game.hasWinner()) {
