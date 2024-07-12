@@ -61,10 +61,12 @@ button {
 }
 
 body {
-    position: relative;
     background-color: var(--background-color);
     background-image: url(./images/paper.jpg);
     background-size: cover;
+    display: grid;
+    grid-template-rows: auto 3rem;
+    min-height: 100vh;
 }
 
 .main {
@@ -224,4 +226,9 @@ form button {
 
 #start-new {
     transform: rotate(1deg);
+}
+
+footer {
+    text-align: center;
+    color: var(--light-text-color);
 }
